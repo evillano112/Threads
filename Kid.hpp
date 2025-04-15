@@ -1,5 +1,8 @@
 
-/*
- * TO-DO Enum
- * Moods (lazy, prissy, over tired, greedy, cooperative).
- */
+enum Mood {
+    LAZY,
+    PRISSY,
+    OVERTIRED,
+    GREEDY
+    COOPERATIVE
+};
