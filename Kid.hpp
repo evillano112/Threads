@@ -3,6 +3,7 @@
 
 #include "tools.hpp"
 #include "JobTable.hpp"
+#include "Job.hpp"
 
 enum Mood {
     LAZY,

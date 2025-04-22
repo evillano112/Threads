@@ -24,6 +24,5 @@ ostream& Kid::print(ostream &os) {
 Mood Kid::chooseMood() {
     // Randomly choose a mood
     int moodChoice = rand() % 5;
-    return (Mood)
-
+    return static_cast<Mood>(moodChoice);
 }
