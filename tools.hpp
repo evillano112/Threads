@@ -7,5 +7,8 @@
 #include <vector>
 #include <pthread.h>
 #include <signal.h>
+#include <algorithm>
+
+using namespace std;
 
 #endif

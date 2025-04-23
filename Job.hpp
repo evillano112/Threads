@@ -17,21 +17,25 @@ enum Quality {
     HEAVY,
     VALUE
 };
+
 class Job {
 
 private:
-    unsigned short slow;
-    unsigned short dirty;
-    unsigned short heavy;
-    unsigned int value;
+    unsigned short int slow;
+    unsigned short int dirty;
+    unsigned short int heavy;
+    unsigned short int value;
     string kidName;
-    enum Status status;
+    Status status;
 public:
     Job();
-    void chooseJob(string &kidNameP, int &jobNumberP);
+    void chooseJob(string kidName, int jobNumber);
     void announceDone();
     //get info about job
-    unsigned short int getJobInfo(enum Quality &choice);
+    unsigned short int getJobInfo(Quality choice);
+
+    Status getStatus() { return status; }
+    string getName() { return kidName; }
 };
 
 

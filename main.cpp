@@ -1,6 +1,20 @@
+#include "tools.hpp"
+#include "Mom.hpp"
+
+void banner() {
+    cout << "Program 5" << endl
+         << "By Edward Villano and Eric Garcia"
+         << endl << endl;
+}
 
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    banner();
+
+    srand(time(NULL));
+
+    Mom* mom = new Mom();
+    mom->run();
+
     return 0;
 }

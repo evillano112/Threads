@@ -4,9 +4,6 @@
 using namespace std;
 
 Job::Job() {
-
-    srand(time(NULL));
-
     // Random numbers between 1 and 5
     slow = (rand() % 5) + 1;
     dirty = (rand() % 5) + 1;
@@ -20,14 +17,11 @@ Job::Job() {
 
 };
 
-void Job::chooseJob(string &kidNameP, int &jobNumberP){
+void Job::chooseJob(string kidName, int jobNumber){
 
-    kidName = kidNameP;
+    this->kidName = kidName;
 
     status = WORKING;
-
-    cout << kidNameP << " is working on job " << jobNumberP << endl;
-
 };
 
 void Job::announceDone(){
@@ -39,23 +33,14 @@ void Job::announceDone(){
 };
 //Return specified info about job
 
-unsigned short int Job::getJobInfo(enum Quality &choice){
-    switch(choice){
-
-        case SLOW:
-            return slow;
-
-        case DIRTY:
-            return dirty;
-
-        case HEAVY:
-            return heavy;
-
-        case VALUE:
-            return value;
-
-        default:
+unsigned short int Job::getJobInfo(Quality choice){
+    switch(choice) {
+        case SLOW:  return slow;
+        case DIRTY: return dirty;
+        case HEAVY: return heavy;
+        case VALUE: return value;
+        default: 
+            cout << "Invalid choice" << endl;
             return 0;
-
     }
 }
