@@ -20,7 +20,7 @@ Kid::Kid(const string& name, JobTable* jobTable)
 void Kid::print() {
     ostringstream ss;
     ss.str("");
-    ss << name << " completed jobs worth: " << totalValue << endl;
+    ss << name << " completed jobs worth:\t" << totalValue << endl;
     cout << ss.str();
 }
 

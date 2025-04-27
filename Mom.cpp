@@ -108,7 +108,8 @@ void Mom::computeEarnings() {
 
     // Award $5 to the winner
     kids[idx].awardBonus();
-    cout << kids[idx].getName() << " is the winner!" << endl;
+    cout << "\n" << kids[idx].getName() << " is the winner!" << endl;
+
     totalEarnings += 5;
 
     // Print out the winner
@@ -116,7 +117,7 @@ void Mom::computeEarnings() {
         kid.print();
     }
 
-    cout << "Total earnings: " << totalEarnings << endl;
+    cout << "Total earnings:\t\t\t" << totalEarnings << endl;
     
     
 
