@@ -30,7 +30,7 @@ private:
 public:
     Kid(const string& name, JobTable* jobTableP);
     Kid() : name(""), jobTableP(nullptr) {}
-    ostream& print(ostream &os);
+    void print();
     Mood chooseMood();
     void run();
     int getTotalValue() const { return totalValue; }

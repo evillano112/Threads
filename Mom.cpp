@@ -113,7 +113,7 @@ void Mom::computeEarnings() {
 
     // Print out the winner
     for(Kid kid : kids) {
-        kid.print(cout);
+        kid.print();
     }
 
     cout << "Total earnings: " << totalEarnings << endl;

@@ -1,6 +1,6 @@
 #include "Kid.hpp"
 
-Kid::Kid(const string& name, JobTable* jobTable) 
+Kid::Kid(const string& name, JobTable* jobTable)
     : name(name), jobTableP(jobTable) {
     // Create an empty signal set
     sigset_t set;
@@ -17,9 +17,11 @@ Kid::Kid(const string& name, JobTable* jobTable)
     }
 }
 
-ostream& Kid::print(ostream &os) {
-    os << name << " completed jobs worth: " << totalValue << endl;
-    return os;
+void Kid::print() {
+    ostringstream ss;
+    ss.str("");
+    ss << name << " completed jobs worth: " << totalValue << endl;
+    cout << ss.str();
 }
 
 Mood Kid::chooseMood() {
@@ -29,6 +31,7 @@ Mood Kid::chooseMood() {
 }
 
 void Kid::run() {
+    ostringstream ss;
     // Create empty signal set
     sigset_t set;
     sigemptyset(&set);
@@ -110,13 +113,17 @@ void Kid::run() {
 
         if (sig == SIGQUIT) {
             quitFlag = true;
-            cout << name << " is quitting." << endl;
+            ss.str("");
+            ss << name;
+            ss << " is quitting." << endl;
+            cout << ss.str();
             break;
         }
 
     }
-
-    cout << "Quit Signal Received" << endl;
+    ss.str("");
+    ss << "Quit Signal Received" << endl;
+    cout << ss.str();
     for (auto& job : completedJobs) {
         job.announceDone(); // Announce job completion
         totalValue += job.getJobInfo(VALUE);
@@ -127,28 +134,55 @@ void Kid::run() {
 int Kid::chooseJob(Quality quality) {
     // Loop through until we find the easiest job
     // Could be done faster but probably isn't needed
-    Job job;
+    Job* job = nullptr;
+    ostringstream ss;
+
+
     jobTableP->lockMtx(); // Lock the job table
     for (int k = 1; k <= 5; k++ ) {
         for (int j = 0; j < TABLE_SIZE; j++) {
-            Job job = jobTableP->getJob(j);
-            if (job.getJobInfo(quality) == k && job.getStatus() == NOT_STARTED) {
-                job.chooseJob(name, j); // Choose the job
-                cout << name << " is working on job " << j << endl;
+
+            if (jobTableP->getJob(j).getJobInfo(quality) == k
+            && jobTableP->getJob(j).getStatus() == NOT_STARTED) {
+
+                job = &jobTableP->getJob(j); // moved assignment here
+                job->chooseJob(name, j);
                 break;
+
             }
         }
-        jobTableP->unlockMtx(); // Unlock the job table
-        sleep(job.getJobInfo(SLOW)); // Simulate work
-        if (quitFlag) {
-            return -1;
-        }
-        else {
-            completedJobs.push_back(job); // Add to completed jobs
-            break;
+
+        if (job != nullptr) {
+            break; // Exit the loop after a job is assigned
         }
     }
 
 
+    //protocol if a desired job is not found
+    if (job == nullptr) {
+        ss.str("");
+        ss << name << " couldn't find a desired job, picking one at random!" << endl;
+        cout << ss.str();
+        for (;;) {
+            int j = rand() % TABLE_SIZE;
+            if (jobTableP->getJob(j).getStatus() == NOT_STARTED) {
+                job = &jobTableP->getJob(j);
+                job->chooseJob(name, j);
+                break;
+            }
+        }
+    }
+
+
+    sleep(job->getJobInfo(SLOW)); // do work
+
+    if (quitFlag) {
+        return -1;
+    } else {
+        completedJobs.push_back(*job);
+    }
+
+
+    jobTableP->unlockMtx(); // Unlock the job table
     return 0;
 }

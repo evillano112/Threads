@@ -12,24 +12,27 @@ Job::Job() {
     value = slow * (dirty + heavy);
 
     status = NOT_STARTED;
-
+    kidName = "";
     //kidName will be set later
 
 };
 
 void Job::chooseJob(string kidName, int jobNumber){
-
+    ostringstream ss;
     this->kidName = kidName;
-
+    ss.str("");
+    ss << kidName << " is working on " << jobNumber << endl;
+    cout << ss.str();
     status = WORKING;
 };
 
 void Job::announceDone(){
-
+    ostringstream ss;
+    ss.str("");
     status = COMPLETE;
 
-    cout << kidName << " finished their job!" << endl;
-
+    ss << kidName << " finished their job!" << endl;
+    cout << ss.str();
 };
 //Return specified info about job
 

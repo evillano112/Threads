@@ -16,7 +16,7 @@ public:
     void lockMtx();
     void unlockMtx();
     void addJob(Job job, int index);
-    Job getJob(int index) { return jobs[index]; }
+    Job& getJob(int index) { return jobs[index]; }
     Status getJobStatus(int index);
 };
 

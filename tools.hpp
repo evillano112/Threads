@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
