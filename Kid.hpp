@@ -14,6 +14,12 @@ enum Mood {
     COOPERATIVE
 };
 
+enum MessageCode {
+    ACK,
+    NACK,
+    QUIT
+};
+
 class Kid {
 
 private:

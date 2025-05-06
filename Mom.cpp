@@ -4,20 +4,13 @@ void Mom::initJobTable() {
     // Initialize the job table
     jobTableP = new JobTable();
     
-    // Lock table
-    jobTableP->lockMtx();
 
     for(int k = 0; k < TABLE_SIZE; k++) {
         jobTableP->addJob(Job(), k);
     }
-    
-    // Unlock table
-    jobTableP->unlockMtx();
 }
 
 void Mom::completeJob() {
-    // Lock table
-    jobTableP->lockMtx();
 
     for(int k = 0; k < TABLE_SIZE; k++) {
         if(jobTableP->getJobStatus(k) == COMPLETE) {
@@ -29,8 +22,6 @@ void Mom::completeJob() {
         }
     }
 
-    // Unlock table
-    jobTableP->unlockMtx();
 }
 
 void* doKid(void* param) {

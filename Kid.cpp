@@ -137,8 +137,6 @@ int Kid::chooseJob(Quality quality) {
     Job* job = nullptr;
     ostringstream ss;
 
-
-    jobTableP->lockMtx(); // Lock the job table
     for (int k = 1; k <= 5; k++ ) {
         for (int j = 0; j < TABLE_SIZE; j++) {
 
@@ -182,7 +180,5 @@ int Kid::chooseJob(Quality quality) {
         completedJobs.push_back(*job);
     }
 
-
-    jobTableP->unlockMtx(); // Unlock the job table
     return 0;
 }
