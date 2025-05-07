@@ -38,14 +38,9 @@ void Mom::run() {
         kids[k] = Kid(names[k], jobTableP);
     }
 
-    // Create each thread, and execute each kid's run method
-    // Using the doKid wrapper function
-    for(int k = 0; k < 4; k++) {
-        if(pthread_create(&threads[k], NULL, doKid, &kids[k]) == -1) {
-            perror("pthread_create error");
-            exit(EXIT_FAILURE);
-        }
-    }
+    
+    // Create sockets for kids
+    
 
     // Store time
     savedTime = time(nullptr);

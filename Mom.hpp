@@ -4,9 +4,9 @@
 #include "tools.hpp"    
 #include "JobTable.hpp"
 #include "Kid.hpp"
+#include "Socket.hpp"
 #include <ctime>
 
-#define NUM_THREADS 4
 #define NUM_KIDS 4
 
 class Mom {
@@ -16,7 +16,7 @@ private:
 
     const vector<string> names = {"Ali", "Cory", "Lee", "Pat"};
     Kid kids[NUM_KIDS];
-    pthread_t threads[NUM_THREADS];
+    Socket sockets[NUM_KIDS];
     vector<Job> completedJobs;
 
     time_t savedTime;
