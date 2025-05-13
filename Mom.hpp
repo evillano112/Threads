@@ -16,8 +16,9 @@ private:
 
     const vector<string> names = {"Ali", "Cory", "Lee", "Pat"};
     Kid kids[NUM_KIDS];
-    Socket sockets[NUM_KIDS];
+    Socket momSocket;
     vector<Job> completedJobs;
+    FILE* socketStream;
 
     time_t savedTime;
 
@@ -31,6 +32,7 @@ public:
     void initJobTable();
     void completeJob();
     void run();
+    void handleKids(size_t k, pollfd &pfd);
 };
 
 

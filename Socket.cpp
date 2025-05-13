@@ -7,7 +7,10 @@ Socket::Socket() {
         cerr << "Socket: Can't create socket";
         exit(EXIT_FAILURE);
     };
+}
 
+Socket::Socket(int sockfd) {
+    fd = sockfd;
     // Open C-Style I/O Stream
     socket_fp = fdopen(fd, "r+");
     if (!socket_fp) {
@@ -33,12 +36,23 @@ void Socket::bindToPort(uint16_t portNumber) {
     }
 }
 
-// Update socket with current socket info
-void Socket::refresh() {
-    socklen_t addrlen = sizeof(struct sockaddr_in);
-    int status = getsockname(fd, (sockaddr*)&info, &addrlen);
-    if (status < 0) {
-        cerr << "Socket: getsockname failed on socket " << fd;
+void Socket::listen() {
+    int backlog = 4;
+    if (::listen(fd, backlog)) {
+        cerr << "Can't listen for connections";
         exit(EXIT_FAILURE);
     }
+}
+
+Socket Socket::accept() {
+    sockaddr_in clientAddr;
+    socklen_t addrLen = sizeof(clientAddr);
+
+    int new_fd = ::accept(fd, (sockaddr*)&clientAddr, &addrLen);
+    if (new_fd < 0) {
+        cerr << "Could not create kid sockets";
+        exit(EXIT_FAILURE);
+    }
+
+    return Socket(new_fd);  
 }

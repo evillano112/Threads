@@ -4,7 +4,6 @@ void Mom::initJobTable() {
     // Initialize the job table
     jobTableP = new JobTable();
     
-
     for(int k = 0; k < TABLE_SIZE; k++) {
         jobTableP->addJob(Job(), k);
     }
@@ -38,16 +37,28 @@ void Mom::run() {
         kids[k] = Kid(names[k], jobTableP);
     }
 
-    
-    // Create sockets for kids
-    
+    momSocket = Socket();               // Create server socket for mom
+    momSocket.bindToPort(12345);        // Bind to port 12345
+    momSocket.listen();                 // Listen for connections
 
+    // Create kid sockets and connect to mom's socket
+    for (int k = 0; k < NUM_KIDS; k++) {
+        Socket kid = momSocket.accept();
+        kids[k].setSocket(kid);
+        cout << kids[k].getName() << "'s socket has been connected" << endl;
+    }
+    
     // Store time
     savedTime = time(nullptr);
 
-    // Send SIGUSR1 to all threads
-    for (int k = 0; k < NUM_THREADS; k++) {
-        pthread_kill(threads[k], SIGUSR1);
+    // Sockets to poll
+    vector<pollfd> pfds;
+    for (Kid &kid : kids) {
+        pollfd pfd;
+        pfd.fd = kid.getSocketFD();     // Get socket fd
+        pfd.events = POLLIN;            // Wait for input
+        pfd.revents = 0;
+        pfds.push_back(pfd);
     }
 
     // Loop until 21 seconds
@@ -63,20 +74,41 @@ void Mom::run() {
             completeJob();
         }
 
-    }
+        int ready = poll(pfds.data(), pfds.size(), 1000);
+        if (ready < 0) {
+            cerr << "Polling failed";
+            exit(EXIT_FAILURE);
+        }
+        else if (ready == 0) {
+            // No kids spoke, loop again
+            continue;
+        }
 
-    // Send SIGQUIT to all threads when done with loop
-    for (int k = 0; k < NUM_THREADS; k++) {
-        pthread_kill(threads[k], SIGQUIT);
-    }  
+        // Send and recieve kid messages
+        for (size_t k = 0; k < pfds.size(); k++) {
+            handleKids(k, pfds[k]);
+        }
+        
+        // Kids handle messages
+        for (int k = 0; k < NUM_KIDS; k++) {
+            kids[k].handleMessages();
+        }
 
-    // Join each thread to exit cleanly
-    for (int k = 0; k < NUM_THREADS; k++) {
-        pthread_join(threads[k], NULL);
     }
 
     computeEarnings(); // Compute earnings
 
+}
+
+// Function for mom to handle communicating with kids about jobs
+void Mom::handleKids(size_t k, pollfd &pfd) {
+    if (pfd.revents & POLLIN) {
+        socketStream = kids[k].getSocketStream();
+        char message[256];
+
+        fscanf(socketStream, "%255s", message);
+
+    }
 }
 
 void Mom::computeEarnings() {

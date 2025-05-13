@@ -4,6 +4,7 @@
 #include "tools.hpp"
 #include "JobTable.hpp"
 #include "Job.hpp"
+#include "Socket.hpp"
 #include "SignalHandler.hpp"
 
 enum Mood {
@@ -17,6 +18,7 @@ enum Mood {
 enum MessageCode {
     ACK,
     NACK,
+    NEEDJOB,
     QUIT
 };
 
@@ -29,6 +31,7 @@ private:
     vector<Job> completedJobs;
     int totalValue = 0;
     bool quitFlag = false;
+    Socket socket;
 
     int chooseJob(Quality quality);
 
@@ -42,6 +45,10 @@ public:
     int getTotalValue() const { return totalValue; }
     string getName() const { return name; }
     void awardBonus() { totalValue += 5; }
+    void setSocket(Socket& sock) { socket = sock; }
+    int getSocketFD() { return socket.getFD(); }
+    FILE* getSocketStream() { return socket.getStream(); }
+    void handleMessages();
 };
 
 
